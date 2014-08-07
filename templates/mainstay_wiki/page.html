@@ -4,5 +4,5 @@
 <h2>{{ page.title }}</h2>
 <p><a href="{% url 'mainstay_wiki:edit_page' page.title %}">Edit this page</a></p>
 
-<p>{{ page.content }}</p>
+<p>{{ page.as_html|safe }}</p>
 {% endblock %}
