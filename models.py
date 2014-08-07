@@ -1,9 +1,28 @@
 from datetime import datetime
 import re
+from functools import reduce
+import operator
 
 from django.db import models
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
+
+
+class PageManager(models.Manager):
+    """From http://toastdriven.com/blog/2008/nov/09/quick-dirty-search-django/"""
+    def search(self, search_terms):
+        terms = [term.strip() for term in search_terms.split()]
+        q_objects = []
+
+        for term in terms:
+            q_objects.append(models.Q(title__icontains=term))
+            q_objects.append(models.Q(content__icontains=term))
+
+        # Start with a bare QuerySet
+        qs = self.get_query_set()
+
+        # Use operator's or_ to string together all of your Q objects.
+        return qs.filter(reduce(operator.or_, q_objects))
 
 
 class Page(models.Model):
@@ -11,6 +30,8 @@ class Page(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
+
+    objects = PageManager()
 
     def save(self, *args, **kwargs):
         if not self.id:

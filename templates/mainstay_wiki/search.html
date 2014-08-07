@@ -1,0 +1,15 @@
+{% extends "mainstay_wiki/base.html" %}
+
+{% block content %}
+  <p><strong>Search:</strong> {{ terms }}</p>
+
+  {% if results %}
+    {% for p in results %}
+      <p>
+	<a href="{% url 'mainstay_wiki:page' p.title %}">{{ p.title }}</a>
+      <p>
+    {% endfor %}
+  {% else %}
+    <p>No Results</p>
+  {% endif %}
+{% endblock %}

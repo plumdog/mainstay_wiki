@@ -1,9 +1,13 @@
 {% extends "mainstay_wiki/base.html" %}
 
+{% load form_printer %}
+
 {% block content %}
   <p>Welcome to the Wiki</p>
 
   <p><a href="{% url 'mainstay_wiki:add_page' %}">Add a new page</a></p>
+
+  {% showform search_form 'mainstay_wiki:search' %}
 
   {% if recently_updated %}
     <h3>Recently Updated Pages</h3>
