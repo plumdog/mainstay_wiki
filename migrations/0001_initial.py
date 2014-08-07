@@ -13,10 +13,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Page',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(unique=True, max_length=200)),
+                ('id', models.AutoField(verbose_name='ID', auto_created=True, serialize=False, primary_key=True)),
+                ('title', models.CharField(max_length=200, unique=True)),
                 ('content', models.TextField()),
-                ('created', models.DateTimeField()),
+                ('created_at', models.DateTimeField()),
+                ('updated_at', models.DateTimeField()),
             ],
             options={
             },
