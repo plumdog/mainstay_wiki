@@ -1,6 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+
 from .models import Page
 from .forms import PageForm
+
 
 RECENT = 10
 
@@ -10,21 +13,20 @@ def index(request):
 
 
 def page(request, title):
-    print(title)
     page_ = get_object_or_404(Page, title=title)
     context = {'page': page_}
     return render(request, 'mainstay_wiki/page.html', context)
 
 
 def add_page(request):
-    
     if request.method == 'POST':
         form = PageForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Page added')
             return redirect('mainstay_wiki:index')
         else:
-            print('errors!')
+            messages.error(request, 'Errors')
     else:
         form = PageForm()
 
@@ -37,9 +39,10 @@ def edit_page(request, title):
         form = PageForm(request.POST, instance=page_)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Page editted')
             return redirect('mainstay_wiki:page', page_.title)
         else:
-            print('errors!')
+            messages.error(request, 'Errors')
     else:
         form = PageForm(instance=page_)
 
