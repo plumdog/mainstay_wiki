@@ -1,17 +1,18 @@
 {% extends "mainstay_wiki/base.html" %}
 
 {% block content %}
-<p>Welcome to the Wiki</p>
+  <p>Welcome to the Wiki</p>
 
-<p><a href="{% url 'mainstay_wiki:add_page' %}">Add a new page</a></p>
+  <p><a href="{% url 'mainstay_wiki:add_page' %}">Add a new page</a></p>
 
-{% if recently_updated %}
-<h3>Recently Updated Pages</h3>
-{% for p in recently_updated %}
-<p>
-  <a href="{% url 'mainstay_wiki:page' p.title %}">{{ p.title }}</a> (Updated at {{ p.updated_at }})
-</p>
-{% endfor %}
-{% endif %}
+  {% if recently_updated %}
+    <h3>Recently Updated Pages</h3>
+    {% for p in recently_updated %}
+      <p>
+	<a href="{% url 'mainstay_wiki:page' p.title %}">{{ p.title }}</a>
+	(Updated at {{ p.updated_at }})
+      </p>
+    {% endfor %}
+  {% endif %}
 
 {% endblock %}
