@@ -19,7 +19,7 @@ class PageManager(models.Manager):
             q_objects.append(models.Q(content__icontains=term))
 
         # Start with a bare QuerySet
-        qs = self.get_query_set()
+        qs = self.get_queryset()
 
         # Use operator's or_ to string together all of your Q objects.
         return qs.filter(reduce(operator.or_, q_objects))
