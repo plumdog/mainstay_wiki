@@ -43,3 +43,11 @@ class WikiTestCase(MainstayTest):
                 'content': 'NewContent'}
         r = self.client.post('/wiki/add/', post, follow=True)
         self.assertRedirects(r, '/wiki')
+
+    def test_edit_page(self):
+        self.login()
+        self.assertEqual(Page.objects.count(), 2)
+        post = {'title': 'NewTitle',
+                'content': 'NewContent'}
+        r = self.client.post('/wiki/edit/TestPage', post, follow=True)
+        self.assertRedirects(r, '/wiki/page/NewTitle')
