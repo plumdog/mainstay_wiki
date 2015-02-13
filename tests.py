@@ -35,3 +35,11 @@ class WikiTestCase(MainstayTest):
         r = self.client.get('/wiki/search/withlink')
         results = r.context['results']
         self.assertEqual({r.title for r in results}, {'PageWithLink'})
+
+    def test_add_page(self):
+        self.login()
+        self.assertEqual(Page.objects.count(), 2)
+        post = {'title': 'NewTitle',
+                'content': 'NewContent'}
+        r = self.client.post('/wiki/add/', post, follow=True)
+        self.assertRedirects(r, '/wiki')
