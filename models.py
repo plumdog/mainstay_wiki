@@ -1,4 +1,3 @@
-from datetime import datetime
 import re
 from functools import reduce
 import operator
@@ -6,6 +5,8 @@ import operator
 from django.db import models
 from django.utils.html import escape
 from django.core.urlresolvers import reverse
+
+from mainstay.models import UpdatedAndCreated
 
 
 class PageManager(models.Manager):
@@ -25,19 +26,13 @@ class PageManager(models.Manager):
         return qs.filter(reduce(operator.or_, q_objects))
 
 
-class Page(models.Model):
+class Page(UpdatedAndCreated, models.Model):
     title = models.CharField(max_length=200, unique=True)
     content = models.TextField()
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
 
     objects = PageManager()
-
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.created_at = datetime.today()
-        self.updated_at = datetime.today()
-        return super(Page, self).save(*args, **kwargs)
 
     def as_html(self):
         def match_replace(match):
