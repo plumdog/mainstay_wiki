@@ -9,9 +9,8 @@ class WikiTestCase(MainstayTest):
     fixtures = MainstayTest.fixtures + ['wiki_pages']
 
     def test_user_loaded(self):
-        user = User.objects.get()
-        self.assertEqual(user.username, 'admin')
-        self.assertEqual(user.is_superuser, True)
+        self.assertEqual(self.admin.username, 'admin')
+        self.assertEqual(self.admin.is_superuser, True)
 
     def test_pages_loaded(self):
         pages = Page.objects.all()
@@ -19,20 +18,23 @@ class WikiTestCase(MainstayTest):
 
     def test_page_view(self):
         self.login()
-        r = self.client.get('/wiki/page/TestPage')
+        r = self.client.get('/wiki/page/TestPage/')
+        self.assertEqual(r.status_code, 200)
 
     def test_page_with_link(self):
         self.login()
-        r = self.client.get('/wiki/page/PageWithLink')
-        self.assertInHTML('<a href="/wiki/page/TestPage">TestPage</a>', r.content.decode('utf-8'))
+        r = self.client.get('/wiki/page/PageWithLink/')
+        self.assertEqual(r.status_code, 200)
+        self.assertInHTML('<a href="/wiki/page/TestPage/">TestPage</a>', r.content.decode('utf-8'))
 
     def test_search(self):
         self.login()
-        r = self.client.get('/wiki/search/page')
+        r = self.client.get('/wiki/search/page/')
+        self.assertEqual(r.status_code, 200)
         results = r.context['results']
         self.assertEqual({r.title for r in results}, {'TestPage', 'PageWithLink'})
 
-        r = self.client.get('/wiki/search/withlink')
+        r = self.client.get('/wiki/search/withlink/')
         results = r.context['results']
         self.assertEqual({r.title for r in results}, {'PageWithLink'})
 
@@ -49,5 +51,5 @@ class WikiTestCase(MainstayTest):
         self.assertEqual(Page.objects.count(), 2)
         post = {'title': 'NewTitle',
                 'content': 'NewContent'}
-        r = self.client.post('/wiki/edit/TestPage', post, follow=True)
-        self.assertRedirects(r, '/wiki/page/NewTitle')
+        r = self.client.post('/wiki/edit/TestPage/', post, follow=True)
+        self.assertRedirects(r, '/wiki/page/NewTitle/')
